@@ -2,18 +2,22 @@
 
 namespace App;
 
+
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
-use Tymon\JWTauth\Contracts\JWTSubject;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+
+class User extends Model implements AuthenticatableContract, AuthorizableContract,JWTSubject
 {
     use Authenticatable, Authorizable;
 
-    protected $table = "users";
+    protected $table = "user";
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,14 +28,28 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
+     * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = [
-        'password',
+        'password', 'remember_token',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -56,7 +74,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function dataToCreate($request,$password_hash)
     {
-      
+
         $data = [
             "name"=>$request->name,
             "email"=>$request->email,
@@ -64,5 +82,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         ];
         return $data;
     }
+
 
 }

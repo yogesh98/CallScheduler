@@ -2,11 +2,11 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+
+
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
 ))->bootstrap();
-
-date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
 /*
 |--------------------------------------------------------------------------
@@ -19,13 +19,16 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 |
 */
 
+
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+
 $app->withFacades();
 
 $app->withEloquent();
+
 
 /*
 |--------------------------------------------------------------------------
@@ -50,19 +53,6 @@ $app->singleton(
 
 /*
 |--------------------------------------------------------------------------
-| Register Config Files
-|--------------------------------------------------------------------------
-|
-| Now we will register the "app" configuration file. If the file exists in
-| your configuration directory it will be loaded; otherwise, we'll load
-| the default version. You may register other files below as needed.
-|
-*/
-
-$app->configure('app');
-
-/*
-|--------------------------------------------------------------------------
 | Register Middleware
 |--------------------------------------------------------------------------
 |
@@ -73,12 +63,14 @@ $app->configure('app');
 */
 
 $app->middleware([
-    App\Http\Middleware\CORSMiddleware::class
+  App\Http\Middleware\CorsMiddleware::class
 ]);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -92,15 +84,11 @@ $app->routeMiddleware([
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-
 $app->register(App\Providers\AuthServiceProvider::class);
 
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
 $app->register(Urameshibr\Providers\FormRequestServiceProvider::class);
-
-$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
-
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*
@@ -119,5 +107,8 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
 });
+
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+
 
 return $app;

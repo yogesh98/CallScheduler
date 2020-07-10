@@ -1,7 +1,5 @@
 <?php
 
-/** @var \Laravel\Lumen\Routing\Router $router */
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,6 +11,16 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+//no $router->get('/', function () use ($router) {
+//     return $router->app->version();
+// });
+
+
+$router->group(['prefix' => 'user'], function () use ($router) {
+    $router->post('register', 'UserController@register');
+    $router->post('login', 'UserController@login');
+    $router->get('view-profile','UserController@viewProfile');
+    $router->get('logout','UserController@logout');
+    $router->post('refresh-token','UserController@refreshToken');
+    $router->get('get-registered-users','UserController@allUsers');
 });
