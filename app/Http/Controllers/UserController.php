@@ -119,11 +119,73 @@ class UserController extends Controller
     /**
      * Get all User.
      *
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function allUsers()
     {
          return response()->json(['users' =>  User::all()], 200);
+    }
+
+    /**
+     * Get All Connections
+     * 
+     * @return 
+     */
+    // public function getConnections(Request $request, $emailid, $email)
+    // {
+    //     $query = "Select * From connections where email = '".$emailid."@".$email.".com' or connection_email = '".$emailid."@".$email.".com'";
+    //     $results = app('db')->select($query);
+    //     return response()->json(['result' => $results], 200);
+    // }
+
+    public function getConnections(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required',
+            ]);
+        $email = $request->email;
+        $query = "Select * From connections where email = '".$email."' or connection_email = '".$email."';";
+        $results = app('db')->select($query);
+        return response()->json(['result' => $results], 200);
+    }
+
+    // public function createConnection(Request $request, $emailidInit, $emailInit, $emailidRec, $emailRec)
+    // {
+    //     $query = "INSERT INTO `callscheduler`.`connections` (`email`, `connection_email`) VALUES ('".$emailidInit."@".$emailInit.".com', '".$emailidRec."@".$emailRec.".com');";
+    //     $results = app('db')->select($query);
+    //     return response()->json(['result' => $results], 200);
+    // }
+    public function createConnection(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required',
+            'emailRec' => 'required',
+            ]);
+        $email = $request->email;
+        $emailRec = $request->emailRec;
+        $query = "INSERT INTO `callscheduler`.`connections` (`email`, `connection_email`) VALUES ('".$email."', '".$emailRec."');";
+        $results = app('db')->select($query);
+        return response()->json(['result' => $results], 200);
+    }
+
+    public function updateDateTime(Request $request, $id, $datetime)
+    {
+        $query = "update connections set scheduled_date_time = '".$datetime."' where id = ".$id.";";
+        $results = app('db')->select($query);
+        return response()->json(['result' => $results], 200);
+    }
+    public function cancelConnection(Request $request, $id)
+    {
+        $this->validate($request, [
+            'email' => 'required'
+            ]);
+        $query = "Delete from connections where id = ".$id.";";
+        $results = app('db')->select($query);
+
+        $email = $request->email;
+        $query = "Select * From connections where email = '".$email."' or connection_email = '".$email."';";
+        $results = app('db')->select($query);
+        return response()->json(['result' => $results], 200);
     }
 
 

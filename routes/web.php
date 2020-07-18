@@ -23,4 +23,10 @@ $router->group(['prefix' => 'user'], function () use ($router) {
     $router->get('logout','UserController@logout');
     $router->post('refresh-token','UserController@refreshToken');
     $router->get('get-registered-users','UserController@allUsers');
+    //$router->get('get-connected-users/{emailid}/{email}','UserController@getConnections');
+    $router->post('get-connected-users','UserController@getConnections');
+    //$router->post('create-connection/{emailidInit}/{emailInit}/{emailidRec}/{emailRec}', "UserController@createConnection");
+    $router->post('create-connection', "UserController@createConnection");
+    $router->post('update-date-time/{id}/{datetime}', 'UserController@updateDateTime');
+    $router->post('cancel-connection/{id}', 'UserController@cancelConnection');
 });
